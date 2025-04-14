@@ -9,33 +9,21 @@ function descedentgradient(alpha::Float32, features::Array, pattern::Array)
     featureswithintercept = [features intercept]
     parameters = zeros(featurequantity + 1)
     iter = 0
-    while true
+    while iter < 10000
         iter += 1
         n::Integer = length(pattern)
         estimation = featureswithintercept * parameters
         parameters = optimizeparameters(alpha, estimation, parameters, featureswithintercept, pattern)
         println("parameters find on iteration ", iter, ": ", parameters)
-        if (iter > 100000)
-            break
-        end
     end
     return (iter, parameters)
 end
 
 function optimizeparameters(alpha::Float32, estimationsvec::Array, currentparams::Array, features::Matrix, patterns::Array)
     errors = patterns - estimationsvec
-    sum = features' * errors
+    gradient = features' * errors
     n = size(estimationsvec, 1)
-    return currentparams + (alpha * sum) / n
-end
-
-
-
-function calculatemodulus(x::Number)
-    if x >= 0
-        return x
-    end
-    return x * (-1)
+    return currentparams + (alpha * gradient) / n
 end
 
 #MSE - mean squared error
