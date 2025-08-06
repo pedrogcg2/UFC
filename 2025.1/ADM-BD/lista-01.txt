@@ -1,0 +1,29 @@
+1) A afirmacao esta correta. O 2PL conservativo eh um protocolo conservador, esses protocolos tem como principal caracteristica o uso de bloqueios de objetos do banco de dados e atrasa a execucao de uma operacao caso o bloqueio nao esteja disponivel. no caso especifico do 2pl conservativo, ele evita deadlocks por atrasar a execucao ate que todos os bloqueios estejam disponiveis, assim duas transacoes que necessitam dos mesmos bloqueios exclusivos nao vao rodar simultaneamente, eliminando qualquer possibilidade de deadlock.
+
+2) Por precisar de todos os bloqueios antes do inicio de uma transacao, esse tipo de protocolo tem baixo nivel de concorrencia, fazendo com que os SGBDs deem preferencia a protocolos que fazem um balanco entre consistencia e concorrencia. Um protocolo que tem alta consistencia e alta concorrencia, ppor exemplo eh o 2v2pl, sendo assim, nao faz sentido escolher um protocolo menos eficiente.
+
+3) no grafico a) o througput eh maior no caso da granulosidade grossa devido a diminuicao do overhead no gerenciamento de locks, uma vez que transacoes longas provavelmente irao utilizar muitos dados,  por consequencia muitos locks terao que ser gerenciados pelo SGBD. Garantindo uma granulosidade grossa, eh possivel reduzir bastante esse overhead, apesar de diminuicao da concorrencia de transacoes.
+
+no grafico b), o througput eh maior para o caso de granulosidade fina pois transacoes curtas geralmente nao precisam de muitos locks devido ao fato de manusearem menos dados, isso faz com que o overhead do gerenciamente de locks seja naturalmente bem menor para cada transacao, sendo assim, podemos usar uma granulosidade fina e aumentar a concorrencia.
+
+
+4) 
+a) Caso o problema esteja no fato de que multiplos dados em paginas distintas estejam sendo acessados repetidas vezes, eh possivel que o aumento da capacidade de m1 aumente a taxa de acerto, pois ira conseguir manter mais paginas em buffer, evitando substituicoes desnecessarias.
+b) No caso de aumentar o tamanho de pagina, eh possivel que o a taxa de acerto diminua, uma vez que a area disponivel de buffer vai ser ocupado por menos paginas, fazendo com que seja necessario buscar novas paginas em disco mais vezes.
+
+
+5) 
+a) 4 escritas
+b) n escritas
+
+6) 
+
+7) O protocolo 2PL rigoroso atrasa as transacoes ate que todos os bloqueios necessarios estejam disponiveis, enquanto o 2v2pl, sendo um protocolo otimista, nao atrasa as transacoes. Isso faz com que o nivel de concorrencia do 2v2pl seja bem mais alto. o pior caso eh quando multiplas transacoes longas (leitura e escrita) sao executadas de maneira concorrente no mesmo recurso, pois eh possivel que ao chegar na fase de commit, um deadlock seja gerado, pois uma transacao espera a outra transacao liberar o bloqueio de escrita e vice-versa.
+
+8) O pior cenario para o raid 5 sao cenarios de muita escrita, uma vez que a que para cada dado gravado, eh necessario tambem escrever a paridade
+
+9) primeiro podemos definir o nivel de raid. Em aplicacoes com alta escrita e leitura, podemos utilizar o raid 10. Para cenarios que precisam de alta confiabilidade e baixa escrita, raid 6 pode ser utilizado. Em caso de cenarios com baixa escrita e alta leitura, tambem eh possivel considerar o uso de ssds, uma vez que seu tempo de vida se da atraves da escrita. 
+
+10) quando uma transacao faz uma operacao que causa um conflito de granulosidade, como consultar uma tabela e em seguida tentar atualizar uma tupla nessa tabela, isso gera a espera por um bloqueio que ja detem. O que pode ser feito eh utilizar um bloqueio de atualizacao, para indiicar que havera escrita tambem no que foi lido. 
+
+o scheduler deve manter um grafo de espera, que mostra as transacoes que esperam a liberacao de bloqueio de outras transacoes. Caso alguma transacao inserida no grafo cause um ciclo, ela deve ser abortada, evitando o deadlock.

@@ -1,0 +1,24 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: sqlserver-container
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Pg742224" 
+    ports:
+      - "1433:1433"
+    volumes:
+      - /home/pedro/Documentos/projetos/UFC/2025.1/ADM-BD/TPC-H/tpch-volume:/var/opt/mssql
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "Pg742224" 
+      POSTGRES_DB: "TPCH"
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/pedro/Documentos/projetos/UFC/2025.1/ADM-BD/TPC-H/tpch-volume-postgres:/var/lib/postgresql/data
+    restart: always
